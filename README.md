@@ -39,4 +39,3 @@ git push -u origin master
 # All Contributors:
 Zhenghui Xiang, Zeyu Ye, Dan Li, Kun Qin, Di Mao, Zheng Chai, Daniel Chiuchiarelli, Jime Smith and Xing Hu
 
-![screen-shoot](CandyCrushCopy/ScreenShot1.jpg)
