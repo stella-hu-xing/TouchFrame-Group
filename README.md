@@ -1,6 +1,15 @@
 # Touch Frame
 The Touch Frame application is a social networking app that connects families and ensures the safety of elder people in families. Our goal is to make life of families and elderly people happy, fun and enjoyable.
 
+## Demonstration
+![screen-shoot]()
+![screen-shoot]()
+![screen-shoot]()
+![screen-shoot]()
+![screen-shoot]()
+![screen-shoot]()
+
+
 # Knowledge Base
 ## Git
 ### Initializing the repository
@@ -27,3 +36,7 @@ git commit -m "<message>" # For example: git commit -m "Bug fixes"
 # push to remote repository
 git push -u origin master
 ```
+# All Contributors:
+Zhenghui Xiang, Zeyu Ye, Dan Li, Kun Qin, Di Mao, Zheng Chai, Daniel Chiuchiarelli, Jime Smith and Xing Hu
+
+![screen-shoot](CandyCrushCopy/ScreenShot1.jpg)
