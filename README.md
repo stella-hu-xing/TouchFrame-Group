@@ -2,12 +2,12 @@
 The Touch Frame application is a social networking app that connects families and ensures the safety of elder people in families. Our goal is to make life of families and elderly people happy, fun and enjoyable.
 
 ## Demonstration
-![screen-shoot]()
-![screen-shoot]()
-![screen-shoot]()
-![screen-shoot]()
-![screen-shoot]()
-![screen-shoot]()
+![screen-shoot](ScreenShoot/1.png)
+![screen-shoot](ScreenShoot/2.png)
+![screen-shoot](ScreenShoot/3.png)
+![screen-shoot](ScreenShoot/4.png)
+![screen-shoot](ScreenShoot/5.png)
+![screen-shoot](ScreenShoot/6.png)
 
 
 # Knowledge Base
