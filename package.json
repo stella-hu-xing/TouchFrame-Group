@@ -1,0 +1,33 @@
+{
+  "name": "touchframe",
+  "version": "1.0.0",
+  "description": "SWEN90013 - touchframe project ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://zeyuy@bitbucket.cis.unimelb.edu.au:8445/scm/~zeyuy/touchframe.git"
+  },
+  "keywords": [
+    "nodejs",
+    "react",
+    "react-native",
+    "electron",
+    "gulp",
+    "swagger"
+  ],
+  "author": "Zeyu Ye",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-chug": "^0.5.1"
+  },
+  "dependencies": {
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "stardust": "^0.36.3",
+    "webpack": "^1.13.2"
+  }
+}

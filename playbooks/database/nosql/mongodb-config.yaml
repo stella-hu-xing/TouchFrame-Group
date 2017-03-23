@@ -1,0 +1,15 @@
+#
+# MongoDB Configuration Component
+# creator: David
+#
+---
+- name: ensure mongodb is listenning on all network interface
+  lineinfile: |
+    dest=/etc/mongod.conf
+    regexp='^(\s+)bindIp: \d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$'
+    line='\1bindIp: 0.0.0.0'
+    backrefs=yes
+  register: mongodb_conf
+- name: restart mongodb service
+  service: name=mongodb state=restarted
+  when: mongodb_conf.changed

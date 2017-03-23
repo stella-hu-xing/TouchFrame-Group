@@ -1,0 +1,26 @@
+{
+  "name": "carerdash",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "babel-core": "*",
+    "babel-loader": "*",
+    "babel-preset-es2015": "*",
+    "babel-preset-react": "*",
+    "css-loader": "*",
+    "express": "^4.13.4",
+    "json-loader": "^0.5.4",
+    "jsx-loader": "*",
+    "pusher-js": "^3.2.1",
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0",
+    "react-image-gallery": "^0.7.2",
+    "socket.io-client": "^1.5.0",
+    "style-loader": "*",
+    "superagent": "^2.3.0",
+    "webpack": "^1.13.1"
+  }
+}

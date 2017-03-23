@@ -1,0 +1,33 @@
+#
+# MongoDB Setup Component
+# creator: David
+#
+---
+- name: |
+    installing mongodb ({{ansible_distribution}}
+    {{ansible_distribution_release}})
+  include: ./mongodb-install-ubuntu-xenial.yaml
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "xenial"
+- name: |
+    installing mongodb ({{ansible_distribution}}
+    {{ansible_distribution_release}})
+  include: ./mongodb-install-ubuntu-willy.yaml
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "willy"
+- name: |
+    installing mongodb ({{ansible_distribution}}
+    {{ansible_distribution_release}})
+  include: ./mongodb-install-ubuntu-trusty.yaml
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "trusty"
+- name: |
+    installing mongodb ({{ansible_distribution}}
+    {{ansible_distribution_release}})
+  include: ./mongodb-install-ubuntu-precise.yaml
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "precise"

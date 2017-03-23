@@ -1,0 +1,27 @@
+---
+- hosts: touchframe
+  vars_prompt: 
+    - name: "gituser" 
+      prompt: "Enter git username" 
+      private: no 
+    - name: "gitpass" 
+      prompt: "Enter git password" 
+      private: yes 
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+      - name: set git remote
+        git_config: name=remote.origin.url
+                    repo=/touchframe
+                    scope=local
+                    value=https://{{ gituser }}:{{ gitpass }}@bitbucket.cis.unimelb.edu.au:8445/scm/~zeyuy/touchframe.git
+      - name: set git remote
+        git_config: name=remote.origin.fetch
+                    repo=/touchframe
+                    scope=local
+                    value=+refs/heads/*:refs/remotes/origin/*
+      - name: pull
+        command: git pull origin master
+        args:
+            chdir: /touchframe

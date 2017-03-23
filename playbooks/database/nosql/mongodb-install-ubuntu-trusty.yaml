@@ -1,0 +1,26 @@
+#
+# Menubar Component
+# creator: David
+#
+---
+- name: ensure mongodb apt key is present
+  apt_key: |
+    keyserver='hkp://keyserver.ubuntu.com:80'
+    id=EA312927
+  when: |
+    ansible_distribution == "Ubuntu"
+- name: ensure mongodb apt repository is present
+  apt_repository: |
+    repo="deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/{{version}} multiverse"
+    update_cache=yes
+    filename='mongodb-org-{{version}}'
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "trusty"
+- name: ensure mongodb {{version}} is installed
+  apt: name=mongodb-org
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "trusty"
+- name: ensure mongodb is started (and enabled on boot)
+  service: name=mongodb state=started enabled=yes

@@ -1,0 +1,26 @@
+#
+# Docker Dependency (Ubuntu Xenial) Component
+# creator: David
+#
+---
+- name: find the linux kernal version
+  shell: uname -r
+  register: kernal_version
+- name: install linux-image-extra-packages
+  apt: name=linux-image-extra-{{kernal_version.stdout}}
+  when: |
+    ansible_distribution == "Ubuntu"
+- name: ensure docker apt key is present
+  apt_key: |
+    keyserver='hkp://p80.pool.sks-keyservers.net:80'
+    id=58118E89F3A912897C070ADBF76221572C52609D
+  when: |
+    ansible_distribution == "Ubuntu"
+- name: ensure docker repository is present
+  apt_repository: |
+    repo="deb https://apt.dockerproject.org/repo ubuntu-xenial main"
+    update_cache=yes
+    filename='docker'
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "xenial"

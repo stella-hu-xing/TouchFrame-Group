@@ -1,0 +1,46 @@
+#
+# MongoDB Installation (Ubuntu Xenial) Component
+# creator: David
+#
+---
+- name: ensure mongodb apt key is present
+  apt_key: |
+    keyserver='hkp://keyserver.ubuntu.com:80'
+    id=EA312927
+  when: |
+    ansible_distribution == "Ubuntu"
+- name: ensure mongodb apt repository is present
+  apt_repository: |
+    repo="deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/{{version}} multiverse"
+    update_cache=yes
+    filename='mongodb-org-{{version}}'
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "xenial"
+- name: ensure mongodb {{version}} is installed
+  apt: name={{item}}
+  with_items:
+    - mongodb-org
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "xenial"
+- name: ensure mongodb service file is created
+  blockinfile:
+    dest: /etc/systemd/system/mongodb.service
+    owner: root
+    group: root
+    mode: 0644
+    block: |
+      [Unit]
+      Description=High-performance, schema-free document-oriented database
+      After=network.target
+
+      [Service]
+      User=mongodb
+      ExecStart=/usr/bin/mongod --quiet --config /etc/mongod.conf
+
+      [Install]
+      WantedBy=multi-user.target
+    create: yes
+- name: ensure mongodb is started (and enabled on boot)
+  service: name=mongodb state=started enabled=yes

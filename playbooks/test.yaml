@@ -1,0 +1,10 @@
+---
+- hosts: '{{ host }}'
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: find the kernal version
+      shell: uname -r
+      register: kernal_version
+    - debug: msg='kernal_verion={{kernal_version}}'

@@ -1,0 +1,9 @@
+#
+# Mariadb Component
+# creator: Max
+#
+---
+- name: install mariadb
+  include: ./mariadb-install.yaml
+- name: configure mariadb
+  include: ./mariadb-config.yaml

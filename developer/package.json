@@ -1,0 +1,27 @@
+{
+  "name": "touchframe-api-doc",
+  "version": "1.0.0",
+  "description": "api documentation for internal and thirdparty developers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://zeyuy@bitbucket.cis.unimelb.edu.au:8445/scm/~zeyuy/touchframe.git"
+  },
+  "keywords": [
+    "api",
+    "swagger",
+    "gulp"
+  ],
+  "author": "Zeyu Ye",
+  "license": "ISC",
+  "dependencies": {
+    "swagger-editor": "^2.10.1",
+    "swagger-ui": "^2.1.4"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}

@@ -1,0 +1,12 @@
+#
+# Docker Installation (Ubuntu Xenial) Component
+# creator: David
+#
+---
+- name: install docker-engine
+  apt: name=docker-engine
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "xenial"
+- name: ensure docker-engine is started
+  service: name=docker state=started

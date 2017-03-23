@@ -1,0 +1,27 @@
+---
+- name: ensure software-properties-common is installed
+  apt: name=software-properties-common update_cache=yes
+  when: ansible_distribution == "Ubuntu"
+- name: ensure mariadb apt key is present
+  apt_key: |
+    keyserver='hkp://keyserver.ubuntu.com:80'
+    id=0xcbcb082a1bb943db
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "willy"
+- name: ensure mariadb {{version}} repository is present
+  apt_repository: |
+    repo="deb [arch=amd64,i386]
+    http://mariadb.mirror.digitalpacific.com.au/repo/{{version}}/ubuntu
+    {{ansible_distribution_release}} main"
+    update_cache=yes
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "willy"
+- name: ensure mariadb {{version}} is installed
+  apt: name=mariadb-server
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "willy"
+- name: ensure mariadb is started
+  service: name=mysql state=started

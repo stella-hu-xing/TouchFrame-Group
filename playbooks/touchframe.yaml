@@ -1,0 +1,30 @@
+#
+# TouchFrame Setup Component
+# creator: David
+#
+---
+- hosts: '{{ hosts }}'
+  tasks:
+    # update the package repo to the latest version
+    - name: update the apt repository
+      apt: update_cache=yes
+      when: ansible_distribution == "Ubuntu"
+      become: yes
+      become_user: root
+      become_method: sudo
+    # configure MongoDB & Mariadb
+    - name: install database
+      include: ./database/database.yaml
+      when: |
+        'database' in touchframe_components
+      become: yes
+      become_user: root
+      become_method: sudo
+    # spin up docker containers rancher/touchframe
+    - name: install docker container engine
+      include: ./docker/docker.yaml
+      when: |
+        'docker' in touchframe_components
+      become: yes
+      become_user: root
+      become_method: sudo

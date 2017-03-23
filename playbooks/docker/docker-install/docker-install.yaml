@@ -1,0 +1,10 @@
+#
+# Docker Installation Component
+# creator: David
+#
+---
+- name: install docker {{ansible_distribution}} {{ansible_distribution_release}}
+  include: ./docker-install-ubuntu-xenial.yaml
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "xenial"

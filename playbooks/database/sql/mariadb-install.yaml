@@ -1,0 +1,29 @@
+#
+# Mariadb Setup Component
+# creator: Max
+#
+---
+- name: |
+    installing mariadb ({{ansible_distribution}} {{ansible_distribution_release}})
+  include: ./mariadb-install-ubuntu-xenial.yaml
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "xenial"
+- name: |
+    installing mariadb ({{ansible_distribution}} {{ansible_distribution_release}})
+  include: ./mariadb-install-ubuntu-willy.yaml
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "willy"
+- name: |
+    installing mariadb ({{ansible_distribution}} {{ansible_distribution_release}})
+  include: ./mariadb-install-ubuntu-trusty.yaml
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "trusty"
+- name: |
+    installing mariadb ({{ansible_distribution}} {{ansible_distribution_release}})
+  include: ./mariadb-install-ubuntu-precise.yaml
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "precise"

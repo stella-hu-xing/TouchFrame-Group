@@ -1,0 +1,15 @@
+#
+# Mariadb Configuration Dependency Component
+# creator: Max
+#
+---
+- name: ensure python-pip python-dev and libmysqlclient-dev are installed
+  apt: name={{item}}
+  with_items:
+    - python-pip
+    - python-dev
+    - libmysqlclient-dev
+- name: ensure MySQL-python is installed
+  pip: name=MySQL-python
+- name: calling mariadb-config-rancher.yaml
+  include: ./mariadb-config-rancher.yaml

@@ -1,0 +1,1014 @@
+# this is an example of the Uber API
+# as a demonstration of an API spec in YAML
+# Dylan push testing
+swagger: '2.0'
+info:
+  title: TouchFrame private/internal API
+  description: Touch frame api for internal development
+  version: "1.0.0"
+# the domain of the service
+host: api.touchframe.com
+# array of all schemes that your API supports
+schemes:
+  - https
+# will be prefixed to all paths
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /users:
+    get:
+      summary: returns an array of users based on the query
+      description: |
+        depending on the search criteria, this restful api returns an array of users based on the search filter criteria
+      parameters:
+        - name: limit
+          in: query
+          description: limits the number of user to be returned depending on the search filter criteria
+          type: integer
+          default: 100
+        - name: populate
+          in: query
+          description: specify whether or not to populate referenceId to original object in reponse
+          type: boolean
+          default: false
+        - name: ids
+          in: query
+          description: the objectId of the users to be searched, id is to be separated by comma ","
+          type: string
+        - name: sessionId
+          in: query
+          type: string
+          description: the session id of the previous request that can be used to retrieve the remaining results.
+      tags:
+        - User
+      responses:
+        200:
+          description: An array of users
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+        204:
+          description: An array of populated users
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserPopulate'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /user/login:
+    post:
+      summary: initialise a user login
+      description: |
+        initialise a user login
+      parameters:
+        - name: res
+          in: body
+          description: body request to create user
+          schema:
+            type: object
+            properties:
+              mobile:
+                description: the mobile number of the app user to login
+                type: string
+              hardware:
+                description: the hardware id of the device that's used to login the user
+                type: string
+          required: true
+      tags:
+        - User
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              sessionId:
+                description: the sessionId of the request
+                type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: login the user in
+      description: |
+        login the user
+      parameters:
+        - name: res
+          in: body
+          description: body request to login the user
+          schema:
+            type: object
+            properties:
+              mobile:
+                description: the mobile number of the app user to login
+                type: string
+              token:
+                description: the verification token needed to login the user
+                type: string
+              sessionId:
+                description: the sessionId of the device that initiated the user login
+                type: string
+          required: true
+      tags:
+        - User
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /user/{id}:
+    get:
+      summary: returns an array of users based on the query
+      description: |
+        depending on the search criteria, this restful api returns an array of users based on the search filter criteria
+      parameters:
+        - name: populate
+          in: query
+          description: specify whether or not to populate referenceId to object in reponse
+          type: boolean
+          default: false
+        - name: id
+          in: path
+          description: the objectId of the user to be searched
+          type: string
+          required: true
+      tags:
+        - User
+      responses:
+        200:
+          description: Information on the user
+          schema:
+            $ref: '#/definitions/User'
+        204:
+          description: Information on the user (populated)
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: deletes the user
+      description: |
+        delete the user account of the specified id
+      parameters:
+        - name: res
+          in: body
+          description: the body of the request that contains the information to delete the user
+          schema:
+            type: object
+            properties:
+              sessionId:
+                type: string
+                description: the seesionId of the user to be deleted.
+              sessionToken:
+                type: string
+                description: the sessionToken that's used to prove the user logged in
+          required: true
+        - name: id
+          in: path
+          description: the objectId of the user to be deleted
+          type: string
+          required: true
+      tags:
+        - User
+      responses:
+        200:
+          description: Information on the user
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /touches:
+    get:
+      summary: returns an array of touch events based on the query
+      description: |
+        depending on the search criteria, this restful api returns an array of touch events based on the search filter criteria
+      parameters:
+        - name: limit
+          in: query
+          description: limits the number of touch events to be returned depending on the search filter criteria
+          type: integer
+          default: 100
+        - name: populate
+          in: query
+          description: specify whether or not to populate referenceId to original object in reponse
+          type: boolean
+          default: false
+        - name: ids
+          in: query
+          description: the objectId of the touch events to be searched, id is to be separated by comma ","
+          type: string
+        - name: sessionId
+          in: query
+          type: string
+          description: the session id of the previous request that can be used to retrieve the remaining results.
+      tags:
+        - Touch
+      responses:
+        200:
+          description: An array of touch events
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Touch'
+        204:
+          description: An array of populated touch events
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TouchPopulate'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /touch:
+    post:
+      summary: create a touch event
+      description: |
+        create a touch event, based on information provided
+      parameters:
+        - name: res
+          in: body
+          description: body request to create touch event
+          schema:
+            type: object
+            properties:
+              description:
+                description: description of the touch event
+                type: string
+              item:
+                description: the item related to the touch event
+                type: string
+                format: file
+              receivers:
+                description: the elders that receive the touch event
+                type: array
+                items:
+                  description: the objectId of the elder that receives the touch event
+                  type: string
+                  format: objectId
+              others:
+                description: the relatives that receive the touch event
+                type: array
+                items:
+                  type: string
+                  format: objectId
+                  description: the objectId of the relative that receives the touch event
+          required: true
+      tags:
+        - Touch
+      responses:
+        200:
+          description: OK
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /touch/{id}:
+    get:
+      summary: returns the touch event based on the query
+      description: |
+        depending on the search criteria, this restful api returns the touch event based on the search filter criteria
+      parameters:
+        - name: populate
+          in: query
+          description: specify whether or not to populate referenceId to object in reponse
+          type: boolean
+          default: false
+        - name: id
+          in: path
+          description: the objectId of the touch event to be searched
+          type: string
+          required: true
+      tags:
+        - Touch
+      responses:
+        200:
+          description: Information on the touch event
+          schema:
+            $ref: '#/definitions/Touch'
+        204:
+          description: Information on the populated touch event
+          schema:
+            $ref: '#/definitions/TouchPopulate'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: update the touch event
+      description: |
+        update the touch event of the specified id
+      parameters:
+        - name: res
+          in: body
+          description: the body of the request that contains the information to update the touch event
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+                description: the new description of the touch event
+              others:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    action:
+                      type: string
+                      description: specify whether to add or remove the relative
+                      enum: ['+', '-']
+                    user_id:
+                      description: the objectId of the user, which the action will applied to
+                      type: string
+                      format: objectId
+          required: true
+        - name: id
+          in: path
+          description: the objectId of the touch event to be updated
+          type: string
+          required: true
+      tags:
+        - Touch
+      responses:
+        200:
+          description: OK
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: deletes the touch event
+      description: |
+        delete the touch event of the specified id
+      parameters:
+        - name: id
+          in: path
+          description: the objectId of the touch event to be deleted
+          type: string
+          required: true
+      tags:
+        - Touch
+      responses:
+        200:
+          description: The information on the touch event that's deleted
+          schema:
+            $ref: '#/definitions/Touch'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /comments:
+    get:
+      summary: returns an array of comments based on the query
+      description: |
+        depending on the search criteria, this restful api returns an array of comments based on the search filter criteria
+      parameters:
+        - name: limit
+          in: query
+          description: limits the number of comments to be returned depending on the search filter criteria
+          type: integer
+          default: 100
+        - name: populate
+          in: query
+          description: specify whether or not to populate referenceId to original object in reponse
+          type: boolean
+          default: false
+        - name: ids
+          in: query
+          description: the objectId of the comments to be searched, id is to be separated by comma ","
+          type: string
+        - name: sessionId
+          in: query
+          type: string
+          description: the session id of the previous request that can be used to retrieve the remaining results.
+      tags:
+        - Comment
+      responses:
+        200:
+          description: An array of comments
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Comment'
+        204:
+          description: An array of populated touch events
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CommentPopulate'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /comment:
+    post:
+      summary: create a comment based on the parameters
+      description: |
+        create a comment, based on information provided
+      parameters:
+        - name: res
+          in: body
+          description: body request to create comment
+          schema:
+            type: object
+            properties:
+              touch:
+                description: the objectId of the touch event which comment relates to
+                type: string
+                format: objectId
+              content:
+                description: the contents of the comment
+                type: string
+              item:
+                description: voice file of the comment if exists
+                type: string
+                format: file
+          required: true
+      tags:
+        - Comment
+      responses:
+        200:
+          description: OK
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /comment/{id}:
+    get:
+      summary: returns the comment based on the query
+      description: |
+        depending on the search criteria, this restful api returns the comment based on the search filter criteria
+      parameters:
+        - name: populate
+          in: query
+          description: specify whether or not to populate referenceId to object in reponse
+          type: boolean
+          default: false
+        - name: id
+          in: path
+          description: the objectId of the comment to be searched
+          type: string
+          required: true
+      tags:
+        - Comment
+      responses:
+        200:
+          description: Information on the comment
+          schema:
+            $ref: '#/definitions/Comment'
+        204:
+          description: Information on the populated comment
+          schema:
+            $ref: '#/definitions/CommentPopulate'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: update the comment
+      description: |
+        update the comment of the specified id
+      parameters:
+        - name: res
+          in: body
+          description: the body of the request that contains the information to update the comment event
+          schema:
+            type: object
+            properties:
+              content:
+                type: string
+                description: the new contents of the comment
+              item:
+                type: string
+                description: the new voice file of the comment
+                format: file
+          required: true
+        - name: id
+          in: path
+          description: the objectId of the comment to be updated
+          type: string
+          required: true
+      tags:
+        - Comment
+      responses:
+        200:
+          description: OK
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: deletes the comment
+      description: |
+        delete the comment of the specified id
+      parameters:
+        - name: id
+          in: path
+          description: the objectId of the comment to be deleted
+          type: string
+          required: true
+      tags:
+        - Comment
+      responses:
+        200:
+          description: The information on the comment that's deleted
+          schema:
+            $ref: '#/definitions/Comment'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /interactions:
+    get:
+      summary: Interactions
+      description: |
+        Endpoint returning an interaction.
+      parameters:
+        - name: ids
+          description: the objectId of the interactions to be searched, id is separated by comman ","
+          in: query
+          type: string
+        - name: populate
+          in: query
+          description: specify whether or not to populate referenceId to object in reponse
+          type: boolean
+          default: false
+      tags:
+        - Interactions
+      responses:
+        200:
+          description: Interaction information
+          schema:
+            $ref: '#/definitions/Interaction'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /alarms:
+    get:
+      summary: Emergency Alarms
+      description: |
+        Endpoint returning an emergency alarm.
+      parameters:
+        - name: ids
+          description: the objectId of the interactions to be searched, id is separated by comman ","
+          in: query
+          type: string
+        - name: populate
+          in: query
+          description: specify whether or not to populate referenceId to object in reponse
+          type: boolean
+          default: false
+      tags:
+        - Alarms
+      responses:
+        200:
+          description: Emergency alarm information
+          schema:
+            $ref: '#/definitions/Alarm'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /events:
+    get:
+      summary: returns an array of normal event (opposite to emergency alarm) based on the query
+      description: |
+        depending on the search criteria, this restful api returns an array of normal alarm event based on the search filter criteria
+      parameters:
+        - name: limit
+          in: query
+          description: limits the number of events to be returned depending on the search filter criteria
+          type: integer
+          default: 100
+        - name: populate
+          in: query
+          description: specify whether or not to populate referenceId to original object in reponse
+          type: boolean
+          default: false
+        - name: ids
+          in: query
+          description: the objectId of the events to be searched, id is to be separated by comma ","
+          type: string
+        - name: sessionId
+          in: query
+          type: string
+          description: the session id of the previous request that can be used to retrieve the remaining results.
+      tags:
+        - Event
+      responses:
+        200:
+          description: An array of events
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Event'
+        204:
+          description: An array of populated events
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/EventPopulate'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /event:
+    post:
+      summary: create a noraml event
+      description: |
+        create a normal event, based on information provided
+      parameters:
+        - name: res
+          in: body
+          description: body request to create normal event
+          schema:
+            type: object
+            properties:
+              voice:
+                description: the voice of this event
+                type: string
+                format: file
+          required: true
+      tags:
+        - Event
+      responses:
+        200:
+          description: OK
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /event/{id}:
+    get:
+      summary: returns the normal event based on the query
+      description: |
+        depending on the search criteria, this restful api returns the normal event based on the search filter criteria
+      parameters:
+        - name: populate
+          in: query
+          description: specify whether or not to populate referenceId to object in reponse
+          type: boolean
+          default: false
+        - name: id
+          in: path
+          description: the objectId of the normal event to be searched
+          type: string
+          required: true
+      tags:
+        - Event
+      responses:
+        200:
+          description: Information on the normal event
+          schema:
+            $ref: '#/definitions/Event'
+        204:
+          description: Information on the populated normal event
+          schema:
+            $ref: '#/definitions/EventPopulate'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    delete:
+      summary: deletes the normal event
+      description: |
+        delete the normal event of the specified id, return the information fot the last view
+      parameters:
+        - name: id
+          in: path
+          description: the objectId of the noraml event to be deleted
+          type: string
+          required: true
+      tags:
+        - Event
+      responses:
+        200:
+          description: The information on the normal event that's deleted
+          schema:
+            $ref: '#/definitions/Event'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+definitions:
+  User:
+    type: object
+    description: User definitions, contains api properties of a user
+    properties:
+      _id:
+        type: string
+        format: objectId
+        description: objectId of the user
+      type:
+        type: string
+        description: type of the user account, different user have different access previledge to different things.
+        enum: ['Elder', 'Carer', 'Relative']
+      name:
+        type: string
+        description: Real name of the user.
+      mobile:
+        type: string
+        format: number
+        description: mobile number of the user
+      email:
+        type: string
+        format: email
+        description: registered email of the user
+      region:
+        type: string
+        description: location of the user
+      gender:
+        type: string
+        description: user's gender
+        enum: ['M', 'F']
+      birth:
+        type: string
+        format: date
+        description: birthday of the user
+      created_date:
+        type: string
+        format: date
+        description: records the date when the user joined
+      modified_date:
+        type: string
+        format: date
+        description: records the date when the user's info is modified
+      activated:
+        type: boolean
+        description: specifies whether the user is activated
+      relationships:
+        type: array
+        description: users that's related to the user
+        items:
+          type: string
+          format: objectId
+          description: the objectId of user that's related to the user
+  UserPopulate:
+    type: object
+    description: User definitions, contains api properties of a user
+    properties:
+      _id:
+        type: string
+        format: objectId
+        description: objectId of the user
+      type:
+        type: string
+        description: type of the user account, different user have different access previledge to different things.
+        enum: ['Elder', 'Carer', 'Relative']
+      name:
+        type: string
+        description: Real name of the user.
+      mobile:
+        type: string
+        format: number
+        description: mobile number of the user
+      email:
+        type: string
+        format: email
+        description: registered email of the user
+      region:
+        type: string
+        description: location of the user
+      gender:
+        type: string
+        description: user's gender
+        enum: ['M', 'F']
+      birth:
+        type: string
+        format: date
+        description: birthday of the user
+      created_date:
+        type: string
+        format: date
+        description: records the date when the user joined
+      modified_date:
+        type: string
+        format: date
+        description: records the date when the user's info is modified
+      activated:
+        type: boolean
+        description: specifies whether the user is activated
+      relationships:
+        type: array
+        description: users that's related to the user
+        items:
+          $ref: '#/definitions/User'
+  Interaction:
+    type: object
+    description: records the interactions of the user, mainly for recording elder user's interaction
+    properties:
+      _id:
+        type: string
+        format: objectId
+        description: objectId of the interaction
+      date:
+        type: string
+        format: date
+        description: records the date when the interaction was created
+      user:
+          type: string
+          format: objectId
+          description: the objectId of elder user who triggered the interaction
+      operation:
+        type: string
+        description: the operation type the user interacted
+        enum: ['Touch', 'Slide', 'DoubleTouch', 'Shake']
+  Touch:
+    type: object
+    description: a touch event that can be shared with elders
+    properties:
+      _id:
+        type: string
+        format: objectId
+        description: objectId of the touch event
+      type:
+        type: string
+        description: type of the touch event
+        enum: ['Picture', 'Video']
+      description:
+        type: string
+        description: a description can be added to the Touch event
+      item:
+        type: string
+        format: binary
+        description: the binaries of the touch event item
+      sender:
+        type: string
+        format: objectId
+        description: the objectId of user who sends the touch event
+      receivers:
+        type: array
+        description: the elders that receives the touch event
+        items:
+          type: string
+          format: objectId
+          description: the objectId of the elder who receives the touch event
+      others:
+        type: array
+        description: the relatives that participate in the touch event
+        items:
+          type: string
+          format: objectId
+          description: the objectId of the relative who participates in the touch event
+      likes:
+        type: array
+        description: the users who likes the touch event
+        items:
+          type: string
+          format: objectId
+          description: the objectId of the user who likes the touch event
+      comments:
+        type: array
+        description: comments on the touch event
+        items:
+          type: string
+          format: objectId
+          description: the objectId of the comment on the touch event
+  TouchPopulate:
+    type: object
+    description: a populated touch event that can be shared with elders
+    properties:
+      _id:
+        type: string
+        format: objectId
+        description: objectId of the touch event
+      type:
+        type: string
+        description: type of the touch event
+        enum: ['Picture', 'Video']
+      description:
+        type: string
+        description: a description can be added to the Touch event
+      item:
+        type: string
+        format: binary
+        description: the binaries of the touch event item
+      sender:
+        $ref: '#/definitions/User'
+      receivers:
+        type: array
+        description: the elders that receives the touch event
+        items:
+          $ref: '#/definitions/User'
+      others:
+        type: array
+        description: the relatives that participate in the touch event
+        items:
+          $ref: '#/definitions/User'
+      likes:
+        type: array
+        description: the users who likes the touch event
+        items:
+          $ref: '#/definitions/User'
+      comments:
+        type: array
+        description: comments on the touch event
+        items:
+          $ref: '#/definitions/Comment'
+  Comment:
+    type: object
+    description: comment from user that's replied onto a touch event
+    properties:
+      _id:
+        type: string
+        format: objectId
+        description: the objectId of the comment
+      touch:
+        type: string
+        format: objectId
+        description: the touch event of the comment that's replied to
+      type:
+        type: string
+        description: the type of the comment
+        enum: ['Text','Voice']
+      content:
+        type: string
+        description: the content of the comment
+  CommentPopulate:
+    type: object
+    description: populated comment from user that's replied onto a touch event
+    properties:
+      _id:
+        type: string
+        format: objectId
+        description: the objectId of the comment
+      touch:
+        $ref: '#/definitions/Touch'
+      type:
+        type: string
+        description: the type of the comment
+        enum: ['Text','Voice']
+      content:
+        type: string
+        description: the content of the comment
+  Event:
+    type: object
+    description: records an event that's triggered by the elders
+    properties:
+      date:
+        type: string
+        format: date
+        description: created date of the event
+      elder:
+        type: string
+        format: objectId
+        description: the objectId of the user who triggered the event
+      voice:
+        type: string
+        format: file
+        description: file of the voice recorded in the event
+  EventPopulate:
+    type: object
+    description: populated event data structure
+    properties:
+      date:
+        type: string
+        format: date
+        description: created date of the event
+      elder:
+        $ref: '#/definitions/User'
+      voice:
+        type: string
+        format: file
+        description: file of the voice recorded in the event
+  Alarm:
+    type: object
+    description: alarm requested by elders
+    properties:
+      date:
+        type: string
+        description: the date when the alarm is triggered
+        format: dateTime
+      elder:
+        type: string
+        format: objectId
+        description: the objectId of the elder user who triggered the alarm
+      voice:
+        type: string
+        format: binary
+        description: binary file of the voice recorded on the alarm
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string

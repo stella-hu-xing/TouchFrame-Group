@@ -1,0 +1,9 @@
+#
+# Database Component
+# creator: David
+#
+---
+- name: install sql database
+  include: ./sql/mariadb.yaml version=10.1
+- name: install nosql database
+  include: ./nosql/mongodb.yaml version=3.2

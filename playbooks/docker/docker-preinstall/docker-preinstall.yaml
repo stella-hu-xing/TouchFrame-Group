@@ -1,0 +1,15 @@
+#
+# Docker Dependency Component
+# creator: David
+#
+---
+- name: ensure apt-transport-https ca-certificates are installed
+  apt: name={{item}}
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+- name: preinstall docker {{ansible_distribution}} {{ansible_distribution_release}}
+  include: ./docker-preinstall-ubuntu-xenial.yaml
+  when: |
+    ansible_distribution == "Ubuntu" and
+    ansible_distribution_release == "xenial"

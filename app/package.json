@@ -1,0 +1,22 @@
+{
+  "name": "touchframe-app",
+  "version": "1.0.0",
+  "description": "touchframe app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://zeyuy@bitbucket.cis.unimelb.edu.au:8445/scm/~zeyuy/touchframe.git"
+  },
+  "keywords": [
+    "react",
+    "node.js",
+    "cordeva",
+    "semantic-ui",
+    "redux"
+  ],
+  "author": "Zeyu Ye",
+  "license": "ISC"
+}

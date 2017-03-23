@@ -1,0 +1,18 @@
+#
+# Docker Setup Component
+# creator: David
+#
+---
+- name: ensure python-pip python-dev are installed
+  apt: name={{item}}
+  with_items:
+    - python-pip
+    - python-dev
+- name: ensure docker-py are installed
+  pip: name=docker-py
+- name: calling docker preinstall tasks
+  include: ./docker-preinstall/docker-preinstall.yaml
+- name: calling docker install tasks
+  include: ./docker-install/docker-install.yaml
+- name: source docker.d.yaml file
+  include: ./docker.d/docker.d.yaml

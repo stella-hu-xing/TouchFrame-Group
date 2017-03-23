@@ -1,0 +1,99 @@
+---
+- hosts: touchframe
+  vars_prompt: 
+    - name: "gituser" 
+      prompt: "Enter git username" 
+      private: no 
+    - name: "gitpass" 
+      prompt: "Enter git password" 
+      private: yes 
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+      # install necessary package
+      - name: update apt
+        apt: update_cache=yes
+      - name: install vim
+        apt: name=vim state=installed
+      - name: install git
+        apt: name=git state=installed
+      - name: install docker engine
+        apt: name=docker.io state=installed
+      - name: install pip and build-essential
+        apt: pkg={{ item }} state=installed update_cache=yes
+        with_items:
+          - build-essential
+          - python-pip
+          - python-dev
+      - name: ensure docker-py is installed for Ansible Docker Module to work
+        pip: name=docker-py
+
+      # create and pull repo
+      - name: Creates /touchframe folder
+        file: path=/touchframe
+              state=directory
+      - name: init git
+        command: git init /touchframe
+      - name: close git sslverify
+        git_config: name=http.sslVerify
+                    repo=/touchframe
+                    scope=local
+                    value=false
+      - name: set git remote
+        git_config: name=remote.origin.url
+                    repo=/touchframe
+                    scope=local
+                    value=https://{{ gituser }}:{{ gitpass }}@bitbucket.cis.unimelb.edu.au:8445/scm/~zeyuy/touchframe.git
+      - name: set git remote
+        git_config: name=remote.origin.fetch
+                    repo=/touchframe
+                    scope=local
+                    value=+refs/heads/*:refs/remotes/origin/*
+      - name: pull
+        command: git pull origin master
+        args:
+            chdir: /touchframe
+
+      # start docker and necessary docker containers
+      - name: start docker
+        service: name={{ item }} state=started
+        with_items:
+          - docker
+      - name: create touchframe docker network
+        script: scripts/docker_touchframe_network.sh
+      - name: start mongodb docker container
+        docker:
+          name: mongodb_tf
+          image: mongo:3.2.6
+          pull: always
+          detach: True
+          net: touchframe
+          ports:
+              - "5432:27017"
+          state: restarted
+      - name: start touchframe-server docker container
+        docker:
+          name: touchframe-server
+          image: maxzhx/touchframe-server:latest
+          pull: always
+          detach: True
+          net: touchframe
+          state: restarted
+      - name: start nginx docker container
+        docker:
+          name: nginx_tf
+          image: nginx:1.10.0
+          pull: always
+          detach: True
+          net: touchframe
+          ports:
+              - "80:80"
+              - "443:443"
+          volumes:
+              - /touchframe/nginx/nginx.conf:/etc/nginx/nginx.conf
+              - /touchframe/nginx/conf.d:/etc/nginx/conf.d
+              - /touchframe/nginx/sites-available/:/etc/nginx/sites-available
+              - /touchframe/nginx/sites-enabled/:/etc/nginx/sites-enabled
+              - /touchframe/web/html:/usr/share/nginx/html
+          state: restarted

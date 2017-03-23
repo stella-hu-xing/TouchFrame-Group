@@ -1,0 +1,31 @@
+#
+# Mariadb Configuration For Rancher Component
+# creator: Max
+#
+---
+- name: ensure mariadb configured correctly for rancher
+  blockinfile:
+    dest: /etc/mysql/conf.d/rancher.cnf
+    owner: root
+    group: root
+    mode: 0644
+    block: |
+      [mysqld]
+      max_connections = 4096
+      bind-address = 0.0.0.0
+    create: yes
+  register: mariadb_rancher
+- name: create cattle database if doesn't exist
+  mysql_db: name=cattle
+- name: create privileges for cattle user
+  mysql_user: |
+    name="{{ item.name }}"
+    password="{{ item.password }}"
+    priv="{{ item.priv }}"
+    host="{{ item.host }}"
+  with_items:
+    - { name: 'cattle', password: 'cattle', priv: 'cattle.*:ALL', host: '%' }
+    - { name: 'cattle', password: 'cattle', priv: 'cattle.*:ALL', host: 'localhost' }
+- name: ensure mariadb is restarted
+  service: name=mysql state=restarted
+  when: mariadb_rancher.changed

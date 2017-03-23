@@ -1,0 +1,19 @@
+#
+# Docker Rancher Component
+# creator: Max
+#
+- name: ensure rancher docker instance is configured and running
+  docker_container:
+    name: rancher-server
+    image: rancher/server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    env:
+      CATTLE_DB_CATTLE_MYSQL_HOST: 130.56.252.70
+      CATTLE_DB_CATTLE_MYSQL_PORT: 3306
+      CATTLE_DB_CATTLE_MYSQL_NAME: cattle
+      CATTLE_DB_CATTLE_MYSQL_USERNAME: cattle
+      CATTLE_DB_CATTLE_MYSQL_PASSWORD: cattle
+    state: started
+    restart: yes
+    network_mode: touchframe

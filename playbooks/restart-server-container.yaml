@@ -1,0 +1,14 @@
+---
+- hosts: touchframe
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+      - name: start touchframe-server docker container
+        docker:
+          name: touchframe-server
+          image: maxzhx/touchframe-server:latest
+          pull: always
+          detach: True
+          net: touchframe
+          state: restarted

@@ -1,0 +1,9 @@
+#
+# MongoDB Component
+# creator: David
+#
+---
+- name: install mongodb
+  include: ./mongodb-install.yaml
+- name: configure mongodb
+  include: ./mongodb-config.yaml

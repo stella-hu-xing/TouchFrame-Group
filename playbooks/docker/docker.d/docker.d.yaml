@@ -1,0 +1,11 @@
+#
+# Docker Post Configuration Component
+# creator: Max
+#
+---
+- name: ensure touchframe docker network exists
+  script: ./scripts/docker/docker_touchframe_network.sh
+- name: calling ./rancher.yaml
+  include: ./rancher.yaml
+- name: calling ./nginx.yaml
+  include: ./nginx.yaml
